@@ -7,16 +7,16 @@ import com.google.gson.annotations.SerializedName;
 
 public class Podcast implements Parcelable {
 
-    @SerializedName("trackName");
+    @SerializedName("trackName")
     private String trackName;
 
-    @SerializedName("feedUrl");
+    @SerializedName("feedUrl")
     private String feedUrl;
 
-    @SerializedName("artworkUrl100");
+    @SerializedName("artworkUrl100")
     private String artworkUrl100;
 
-    @SerializedName("primaryGenreName");
+    @SerializedName("primaryGenreName")
     private String primaryGenreName;
 
     public String getTrackName() {
