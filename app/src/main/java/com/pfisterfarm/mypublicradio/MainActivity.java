@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -65,10 +66,10 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        fetchPodcastList();
-
         podcastRecycler = findViewById(R.id.podcast_list);
         setupRecyclerView((android.support.v7.widget.RecyclerView) podcastRecycler);
+
+        fetchPodcastList();
 
     }
 
@@ -82,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(LOG_TAG, "URL = " + response.raw().request().url());
                 if (podcasts.getPodcastCount() > 0) {
                     podcastDirectory = podcasts;
+                    mPodcastAdapter.setPodcastList(podcastDirectory);
                 } else {
                     Log.d(LOG_TAG, "Call was successful, but no podcasts found");
                 }
@@ -93,12 +95,21 @@ public class MainActivity extends AppCompatActivity {
      }
 
      private void setupRecyclerView(RecyclerView recyclerView) {
-        mPodcastAdapter = new PodcastRecyclerAdapter();
+        mPodcastAdapter = new PodcastRecyclerAdapter(this, podcastDirectory);
         recyclerView.setAdapter(mPodcastAdapter);
-
+        recyclerView.setLayoutManager(new GridLayoutManager(this,2,GridLayoutManager.VERTICAL,false));
+        recyclerView.setHasFixedSize(true);
      }
 
      public static class PodcastRecyclerAdapter extends RecyclerView.Adapter<PodcastRecyclerAdapter.ViewHolder> {
+
+        Podcasts mPodcasts;
+        private final MainActivity mParentActivity;
+
+        PodcastRecyclerAdapter(MainActivity parent, Podcasts myPodcasts) {
+            mPodcasts = myPodcasts;
+            mParentActivity = parent;
+        }
 
          @NonNull
          @Override
@@ -111,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
          @Override
          public void onBindViewHolder(@NonNull PodcastRecyclerAdapter.ViewHolder holder, int position) {
              Podcast currentPodcast;
-             currentPodcast = podcastDirectory.getSinglePodcast(position);
+             currentPodcast = mPodcasts.getSinglePodcast(position);
              holder.mPodcastText.setText(currentPodcast.getTrackName());
              Picasso.with(holder.mPodcastIcon.getContext()).
                      load(currentPodcast.getArtworkUrl100()).
@@ -121,8 +132,8 @@ public class MainActivity extends AppCompatActivity {
 
          @Override
          public int getItemCount() {
-             if (podcastDirectory != null) {
-                 return podcastDirectory.getPodcastCount();
+             if (mPodcasts != null) {
+                 return mPodcasts.getPodcastCount();
              } else {
                  return 0;
              }
@@ -137,6 +148,11 @@ public class MainActivity extends AppCompatActivity {
                  mPodcastIcon = (ImageView) itemView.findViewById(R.id.podcast_element_icon);
                  mPodcastText = (TextView) itemView.findViewById(R.id.podcast_element_text);
              }
+         }
+
+         public void setPodcastList(Podcasts myPodcasts) {
+            mPodcasts = myPodcasts;
+            notifyDataSetChanged();
          }
      }
 }
