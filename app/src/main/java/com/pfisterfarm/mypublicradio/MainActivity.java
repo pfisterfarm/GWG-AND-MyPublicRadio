@@ -13,9 +13,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.pfisterfarm.mypublicradio.model.Podcast;
 import com.pfisterfarm.mypublicradio.model.Podcasts;
 import com.pfisterfarm.mypublicradio.network.PodcastInterface;
 import com.pfisterfarm.mypublicradio.network.podcastClient;
+import com.squareup.picasso.Picasso;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -27,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
     private final static String LOG_TAG = "debugpublicradio";
 
-    private Podcasts podcastDirectory;
+    private static Podcasts podcastDirectory;
     private podcastClient mPodcastClient;
     private PodcastInterface mPodcastInterface;
 
@@ -90,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
         });
      }
 
-     private void setupRecyclerView(android.support.v7.widget.Recyclerview recyclerView) {
+     private void setupRecyclerView(RecyclerView recyclerView) {
         mPodcastAdapter = new PodcastRecyclerAdapter();
         recyclerView.setAdapter(mPodcastAdapter);
 
@@ -103,12 +105,18 @@ public class MainActivity extends AppCompatActivity {
          public PodcastRecyclerAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
              View view = LayoutInflater.from(parent.getContext())
                      .inflate(R.layout.podcast_list_element,parent,false);
-             return new ViewHolder(view);
+             return new PodcastRecyclerAdapter.ViewHolder(view);
          }
 
          @Override
          public void onBindViewHolder(@NonNull PodcastRecyclerAdapter.ViewHolder holder, int position) {
-            holder.mPodcastText(podcastDirectory.)
+             Podcast currentPodcast;
+             currentPodcast = podcastDirectory.getSinglePodcast(position);
+             holder.mPodcastText.setText(currentPodcast.getTrackName());
+             Picasso.with(holder.mPodcastIcon.getContext()).
+                     load(currentPodcast.getArtworkUrl100()).
+                     fit().
+                     into(holder.mPodcastIcon);
          }
 
          @Override

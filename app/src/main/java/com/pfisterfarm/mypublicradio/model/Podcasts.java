@@ -29,4 +29,8 @@ public class Podcasts {
         this.mPodcasts = pods;
     }
 
+    public Podcast getSinglePodcast(int position) {
+        return mPodcasts.get(position);
+    }
+
 }
