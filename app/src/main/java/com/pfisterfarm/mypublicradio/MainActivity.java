@@ -1,5 +1,7 @@
 package com.pfisterfarm.mypublicradio;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -15,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.pfisterfarm.mypublicradio.model.Podcast;
+import com.pfisterfarm.mypublicradio.model.PodcastRecyclerAdapter;
 import com.pfisterfarm.mypublicradio.model.Podcasts;
 import com.pfisterfarm.mypublicradio.network.PodcastInterface;
 import com.pfisterfarm.mypublicradio.network.podcastClient;
@@ -24,7 +27,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements PodcastRecyclerAdapter.PodcastClickListener {
 
     private TextView mTextMessage;
 
@@ -95,64 +98,18 @@ public class MainActivity extends AppCompatActivity {
      }
 
      private void setupRecyclerView(RecyclerView recyclerView) {
-        mPodcastAdapter = new PodcastRecyclerAdapter(this, podcastDirectory);
+        mPodcastAdapter = new PodcastRecyclerAdapter(this, podcastDirectory, this);
         recyclerView.setAdapter(mPodcastAdapter);
         recyclerView.setLayoutManager(new GridLayoutManager(this,2,GridLayoutManager.VERTICAL,false));
         recyclerView.setHasFixedSize(true);
      }
 
-     public static class PodcastRecyclerAdapter extends RecyclerView.Adapter<PodcastRecyclerAdapter.ViewHolder> {
+    @Override
+    public void onPodcastClick(int clickedPodcastIndex) {
+        final String SEND_PODCAST = "send_podcast";
+        Intent intent = new Intent(this, PodcastDetail.class);
+        intent.putExtra(SEND_PODCAST, podcastDirectory.getSinglePodcast(clickedPodcastIndex));
+        startActivity(intent);
+    }
 
-        Podcasts mPodcasts;
-        private final MainActivity mParentActivity;
-
-        PodcastRecyclerAdapter(MainActivity parent, Podcasts myPodcasts) {
-            mPodcasts = myPodcasts;
-            mParentActivity = parent;
-        }
-
-         @NonNull
-         @Override
-         public PodcastRecyclerAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-             View view = LayoutInflater.from(parent.getContext())
-                     .inflate(R.layout.podcast_list_element,parent,false);
-             return new PodcastRecyclerAdapter.ViewHolder(view);
-         }
-
-         @Override
-         public void onBindViewHolder(@NonNull PodcastRecyclerAdapter.ViewHolder holder, int position) {
-             Podcast currentPodcast;
-             currentPodcast = mPodcasts.getSinglePodcast(position);
-             holder.mPodcastText.setText(currentPodcast.getTrackName());
-             Picasso.with(holder.mPodcastIcon.getContext()).
-                     load(currentPodcast.getArtworkUrl100()).
-                     fit().
-                     into(holder.mPodcastIcon);
-         }
-
-         @Override
-         public int getItemCount() {
-             if (mPodcasts != null) {
-                 return mPodcasts.getPodcastCount();
-             } else {
-                 return 0;
-             }
-         }
-
-         class ViewHolder extends RecyclerView.ViewHolder {
-             final ImageView mPodcastIcon;
-             final TextView mPodcastText;
-
-             public ViewHolder(View itemView) {
-                 super(itemView);
-                 mPodcastIcon = (ImageView) itemView.findViewById(R.id.podcast_element_icon);
-                 mPodcastText = (TextView) itemView.findViewById(R.id.podcast_element_text);
-             }
-         }
-
-         public void setPodcastList(Podcasts myPodcasts) {
-            mPodcasts = myPodcasts;
-            notifyDataSetChanged();
-         }
-     }
 }

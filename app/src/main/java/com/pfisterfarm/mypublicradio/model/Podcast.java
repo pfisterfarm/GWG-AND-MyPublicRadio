@@ -16,6 +16,9 @@ public class Podcast implements Parcelable {
     @SerializedName("artworkUrl100")
     private String artworkUrl100;
 
+    @SerializedName("artworkUrl600")
+    private String artworkUrl600;
+
     @SerializedName("primaryGenreName")
     private String primaryGenreName;
 
@@ -37,6 +40,10 @@ public class Podcast implements Parcelable {
 
     public String getArtworkUrl100() {
         return artworkUrl100;
+    }
+
+    public String getArtworkUrl600() {
+        return artworkUrl600;
     }
 
     public void setArtworkUrl100(String artworkUrl100) {
@@ -61,13 +68,15 @@ public class Podcast implements Parcelable {
         dest.writeString(this.trackName);
         dest.writeString(this.feedUrl);
         dest.writeString(this.artworkUrl100);
+        dest.writeString(this.artworkUrl600);
         dest.writeString(this.primaryGenreName);
     }
 
-    public Podcast(String trackName, String feedUrl, String artworkUrl100, String primaryGenreName) {
+    public Podcast(String trackName, String feedUrl, String artworkUrl100, String artworkUrl600, String primaryGenreName) {
         this.trackName = trackName;
         this.feedUrl = feedUrl;
         this.artworkUrl100 = artworkUrl100;
+        this.artworkUrl600 = artworkUrl600;
         this.primaryGenreName = primaryGenreName;
     }
 
@@ -75,6 +84,7 @@ public class Podcast implements Parcelable {
         this.trackName = in.readString();
         this.feedUrl = in.readString();
         this.artworkUrl100 = in.readString();
+        this.artworkUrl600 = in.readString();
         this.primaryGenreName = in.readString();
     }
 
