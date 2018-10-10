@@ -1,26 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout android:layout_height="match_parent"
+<android.support.constraint.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
     android:layout_width="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <ImageView
-        android:id="@+id/podcast_detail_background"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 
     <ImageView
         android:id="@+id/podcast_detail_icon"
         android:layout_width="100dp"
-        android:layout_height="100dp" />
+        android:layout_height="100dp"
+        android:layout_marginStart="44dp"
+        android:layout_marginTop="60dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/podcast_detail_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/podcast_detail_title"
+        android:layout_width="206dp"
+        android:layout_height="62dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="60dp"
+        android:ellipsize="end"
+        android:maxLines="3"
+        android:minLines="1"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/podcast_detail_icon"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/podcast_detail_desc"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/podcast_detail_desc"
+        android:layout_width="match_parent"
+        android:layout_height="103dp"
+        android:layout_marginTop="196dp"
+        android:padding="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/podcast_detail_typelabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Type:"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/podcast_detail_icon"
+        app:layout_constraintTop_toBottomOf="@+id/podcast_detail_title" />
+
+    <TextView
+        android:id="@+id/podcast_detail_type"
+        android:layout_width="158dp"
+        android:layout_height="34dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toEndOf="@+id/podcast_detail_typelabel"
+        app:layout_constraintTop_toBottomOf="@+id/podcast_detail_title" />
+
+</android.support.constraint.ConstraintLayout>

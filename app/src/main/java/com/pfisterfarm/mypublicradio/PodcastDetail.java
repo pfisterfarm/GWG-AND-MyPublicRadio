@@ -17,6 +17,7 @@ public class PodcastDetail extends AppCompatActivity {
     ImageView podcastIcon;
     TextView podcastTitle;
     TextView podcastDesc;
+    TextView podcastType;
     Podcast mPodcast;
 
     @Override
@@ -29,12 +30,6 @@ public class PodcastDetail extends AppCompatActivity {
         if (intent != null) {
             if (intent.hasExtra(SEND_PODCAST)) {
                 mPodcast = intent.getParcelableExtra(SEND_PODCAST);
-                podcastBackground = findViewById(R.id.podcast_detail_background);
-                Picasso.with(this).
-                        load(mPodcast.getArtworkUrl600()).
-                        fit().
-                        error(R.drawable.npr100).
-                        into(podcastBackground);
                 podcastIcon = findViewById(R.id.podcast_detail_icon);
                 Picasso.with(this).
                         load(mPodcast.getArtworkUrl100()).
@@ -44,7 +39,9 @@ public class PodcastDetail extends AppCompatActivity {
                 podcastTitle = findViewById(R.id.podcast_detail_title);
                 podcastTitle.setText(mPodcast.getTrackName());
                 podcastDesc = findViewById(R.id.podcast_detail_desc);
-
+                podcastDesc.setText("Need to write networking code to fetch podcast description and episode info");
+                podcastType = findViewById(R.id.podcast_detail_type);
+                podcastType.setText(mPodcast.getPrimaryGenreName());
 
             }
         }
