@@ -2,6 +2,7 @@ package com.pfisterfarm.mypublicradio;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -10,6 +11,8 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,6 +79,24 @@ public class MainActivity extends AppCompatActivity implements PodcastRecyclerAd
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.settings_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_settings) {
+            Intent startSettingsActivity = new Intent(this, SettingsActivity.class);
+            startActivity(startSettingsActivity);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     public void fetchPodcastList() {
         PodcastInterface podInt = podcastClient.getInstance();
         Call<Podcasts> podcastCall = podInt.fetchPodcastList("NPR", "podcast");
@@ -98,9 +119,13 @@ public class MainActivity extends AppCompatActivity implements PodcastRecyclerAd
      }
 
      private void setupRecyclerView(RecyclerView recyclerView) {
+        final int CELL_WIDTH = 150;
         mPodcastAdapter = new PodcastRecyclerAdapter(this, podcastDirectory, this);
         recyclerView.setAdapter(mPodcastAdapter);
-        recyclerView.setLayoutManager(new GridLayoutManager(this,2,GridLayoutManager.VERTICAL,false));
+        float screenWidth  = (Resources.getSystem().getDisplayMetrics().widthPixels
+                / Resources.getSystem().getDisplayMetrics().density);
+        int numColumns = (int) screenWidth / CELL_WIDTH;
+        recyclerView.setLayoutManager(new GridLayoutManager(this,numColumns,GridLayoutManager.VERTICAL,false));
         recyclerView.setHasFixedSize(true);
      }
 

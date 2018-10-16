@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <EditTextPreference
+        android:defaultValue="5"
+        android:key="keep_number"
+        android:title="How many episodes to keep" />
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="only_wifi"
+        android:summaryOff="Download on data plan"
+        android:summaryOn="Download on WiFi only"
+        android:title="Download only when connected to WiFi" />
+
+</PreferenceScreen>
