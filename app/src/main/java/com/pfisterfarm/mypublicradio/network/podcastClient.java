@@ -1,6 +1,8 @@
 package com.pfisterfarm.mypublicradio.network;
 
 
+import com.pfisterfarm.mypublicradio.model.PodcastRSS;
+
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -15,7 +17,5 @@ public class podcastClient {
 
         return retrofit.create(PodcastInterface.class);
     }
-
-
 
 }

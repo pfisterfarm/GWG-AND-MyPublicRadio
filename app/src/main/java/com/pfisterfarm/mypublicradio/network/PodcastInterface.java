@@ -1,5 +1,6 @@
 package com.pfisterfarm.mypublicradio.network;
 
+ import com.pfisterfarm.mypublicradio.model.PodcastRSS;
  import com.pfisterfarm.mypublicradio.model.Podcasts;
 
  import retrofit2.Call;
@@ -9,4 +10,7 @@ package com.pfisterfarm.mypublicradio.network;
 public interface PodcastInterface {
     @GET("search")
     Call<Podcasts> fetchPodcastList(@Query("term") String term, @Query("media") String media);
+
+    @GET("article.rss")
+    Call<PodcastRSS> fetchPodcastRSS();
 }
