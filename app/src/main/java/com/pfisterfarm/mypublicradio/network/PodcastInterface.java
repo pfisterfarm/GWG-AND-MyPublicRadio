@@ -11,6 +11,6 @@ public interface PodcastInterface {
     @GET("search")
     Call<Podcasts> fetchPodcastList(@Query("term") String term, @Query("media") String media);
 
-    @GET("article.rss")
-    Call<PodcastRSS> fetchPodcastRSS();
+    @GET("id={id}")
+    Call<PodcastRSS> fetchPodcastRSS(@Query("id") String podcastID);
 }
