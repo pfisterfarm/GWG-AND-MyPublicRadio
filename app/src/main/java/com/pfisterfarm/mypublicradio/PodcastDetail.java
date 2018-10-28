@@ -28,6 +28,7 @@ public class PodcastDetail extends AppCompatActivity {
     TextView podcastDesc;
     TextView podcastType;
     Podcast mPodcast;
+    PodcastRSS podcastRSS;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,14 +50,12 @@ public class PodcastDetail extends AppCompatActivity {
                         into(podcastIcon);
                 podcastTitle = findViewById(R.id.podcast_detail_title);
                 podcastTitle.setText(mPodcast.getTrackName());
-                podcastDesc = findViewById(R.id.podcast_detail_desc);
-                podcastDesc.setText("Need to write networking code to fetch podcast description and episode info");
+
                 podcastType = findViewById(R.id.podcast_detail_type);
                 podcastType.setText(mPodcast.getPrimaryGenreName());
                 splitArr = mPodcast.getFeedUrl().split("=", 2);
 
                 fetchPodcastRSS(splitArr[1]);
-
 
             }
         }
@@ -71,13 +70,18 @@ public class PodcastDetail extends AppCompatActivity {
         podcastCall.enqueue(new Callback<PodcastRSS>() {
             @Override
             public void onResponse(Call<PodcastRSS> call, Response<PodcastRSS> response) {
-                PodcastRSS podcastRSS = response.body();
+                podcastRSS = response.body();
                 Log.d(LOG_TAG, "URL = " + response.raw().request().url());
-
+                displayPodcastDetail();
             }
             public void onFailure(Call<PodcastRSS> call, Throwable t) {
                 Log.d(LOG_TAG, "Failure trying to fetch podcast list");
             }
         });
+    }
+
+    public void displayPodcastDetail() {
+        podcastDesc = findViewById(R.id.podcast_detail_desc);
+        podcastDesc.setText(podcastRSS.getChannel().getDescription());
     }
 }

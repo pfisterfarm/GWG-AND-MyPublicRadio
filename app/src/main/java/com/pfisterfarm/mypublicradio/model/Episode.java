@@ -5,12 +5,15 @@ import android.os.Parcelable;
 
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
+import org.simpleframework.xml.Path;
 import org.simpleframework.xml.Root;
+import org.simpleframework.xml.Text;
 
 @Root(name = "item", strict = false)
 public class Episode implements Parcelable {
 
-    @Element(name = "title")
+    @Path("title")
+    @Text(required = true)
     private String mTitle;
 
     @Element(name = "description")
@@ -19,18 +22,35 @@ public class Episode implements Parcelable {
     @Element(name="pubDate")
     private String mPubDate;
 
-    @Element(name="itunes:duration")
-    private int mDuration;   // episode duration in seconds
+    @Path("itunes:duration")
+    @Text(required = true)
+    private String mDuration;   // episode duration in seconds
 
-    @Element(name="enclosure")
+    @Path("enclosure")
     @Attribute(name="url")
     private String mUrl;
+
+    public Episode() {
+        this.mTitle = "empty";
+        this.mDescription = "empty";
+        this.mPubDate = "01/01/01";
+        this.mDuration = "0";
+        this.mUrl = "http://www.google.com";
+    }
+
+    public Episode(String epTitle, String epDesc, String epPubDate, String epDuration, String epUrl) {
+        this.mTitle = epTitle;
+        this.mDescription = epDesc;
+        this.mPubDate = epPubDate;
+        this.mDuration = epDuration;
+        this.mUrl = epUrl;
+    }
 
     protected Episode(Parcel in) {
         mTitle = in.readString();
         mDescription = in.readString();
         mPubDate = in.readString();
-        mDuration = in.readInt();
+        mDuration = in.readString();
         mUrl = in.readString();
     }
 
@@ -39,7 +59,7 @@ public class Episode implements Parcelable {
         dest.writeString(mTitle);
         dest.writeString(mDescription);
         dest.writeString(mPubDate);
-        dest.writeInt(mDuration);
+        dest.writeString(mDuration);
         dest.writeString(mUrl);
     }
 
@@ -84,11 +104,11 @@ public class Episode implements Parcelable {
         this.mPubDate = mPubDate;
     }
 
-    public int getDuration() {
+    public String  getDuration() {
         return mDuration;
     }
 
-    public void setDuration(int mDuration) {
+    public void setDuration(String mDuration) {
         this.mDuration = mDuration;
     }
 

@@ -10,27 +10,17 @@ import java.util.List;
 @Root(name="rss", strict = false)
 public class PodcastRSS {
 
-    @Element(name = "description")
-    @Path("channel")
-    private String mPodcastDescription;
-
-    @ElementList(name = "item", inline = true)
-    @Path("channel")
-    private List<Episode> mEpisodeList;
-
-    public String getPodcastDescription() {
-        return mPodcastDescription;
+    @Element(name = "channel")
+    private ChannelRSS mChannel;
+    public ChannelRSS getChannel() {
+        return mChannel;
     }
 
-    public void setPodcastDescription(String mPodcastDescription) {
-        this.mPodcastDescription = mPodcastDescription;
+    public PodcastRSS() {
+
     }
 
-    public List<Episode> getEpisodeList() {
-        return mEpisodeList;
-    }
-
-    public void setEpisodeList(List<Episode> mEpisodeList) {
-        this.mEpisodeList = mEpisodeList;
+    public PodcastRSS(ChannelRSS inChannel) {
+        this.mChannel = inChannel;
     }
 }

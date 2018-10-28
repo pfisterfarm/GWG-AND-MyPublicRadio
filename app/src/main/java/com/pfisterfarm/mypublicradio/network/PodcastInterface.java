@@ -11,6 +11,6 @@ public interface PodcastInterface {
     @GET("search")
     Call<Podcasts> fetchPodcastList(@Query("term") String term, @Query("media") String media);
 
-    @GET("id={id}")
+    @GET("podcast.php")
     Call<PodcastRSS> fetchPodcastRSS(@Query("id") String podcastID);
 }
