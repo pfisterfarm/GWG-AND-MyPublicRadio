@@ -30,6 +30,9 @@ public class Episode implements Parcelable {
     @Attribute(name="url")
     private String mUrl;
 
+    // is this episode expanded in the recycler view to show description?
+    private boolean expanded;
+
     public Episode() {
         this.mTitle = "empty";
         this.mDescription = "empty";
