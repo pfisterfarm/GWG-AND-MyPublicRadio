@@ -39,14 +39,16 @@ public class Episode implements Parcelable {
         this.mPubDate = "01/01/01";
         this.mDuration = "0";
         this.mUrl = "http://www.google.com";
+        this.expanded = false;
     }
 
-    public Episode(String epTitle, String epDesc, String epPubDate, String epDuration, String epUrl) {
+    public Episode(String epTitle, String epDesc, String epPubDate, String epDuration, String epUrl, boolean epExpanded) {
         this.mTitle = epTitle;
         this.mDescription = epDesc;
         this.mPubDate = epPubDate;
         this.mDuration = epDuration;
         this.mUrl = epUrl;
+        this.expanded = epExpanded;
     }
 
     protected Episode(Parcel in) {
@@ -55,6 +57,7 @@ public class Episode implements Parcelable {
         mPubDate = in.readString();
         mDuration = in.readString();
         mUrl = in.readString();
+        expanded = (in.readByte() != 0);
     }
 
     @Override
@@ -64,6 +67,7 @@ public class Episode implements Parcelable {
         dest.writeString(mPubDate);
         dest.writeString(mDuration);
         dest.writeString(mUrl);
+        dest.writeByte((byte) (expanded ? 1 : 0));
     }
 
     @Override
@@ -121,5 +125,13 @@ public class Episode implements Parcelable {
 
     public void setUrl(String mUrl) {
         this.mUrl = mUrl;
+    }
+
+    public boolean isExpanded() {
+        return expanded;
+    }
+
+    public void setExpanded(boolean expanded) {
+        this.expanded = expanded;
     }
 }

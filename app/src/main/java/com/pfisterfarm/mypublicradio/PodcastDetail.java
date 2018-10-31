@@ -4,10 +4,13 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.pfisterfarm.mypublicradio.model.Episode;
+import com.pfisterfarm.mypublicradio.model.EpisodeRecyclerAdapter;
 import com.pfisterfarm.mypublicradio.model.Podcast;
 import com.pfisterfarm.mypublicradio.model.PodcastRSS;
 import com.pfisterfarm.mypublicradio.model.Podcasts;
@@ -15,11 +18,14 @@ import com.pfisterfarm.mypublicradio.network.PodcastInterface;
 import com.pfisterfarm.mypublicradio.network.podcastClient;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class PodcastDetail extends AppCompatActivity {
+public class PodcastDetail extends AppCompatActivity implements EpisodeRecyclerAdapter.EpisodeClickListener {
 
     private static final String SEND_PODCAST = "send_podcast";
     ImageView podcastBackground;
@@ -29,6 +35,8 @@ public class PodcastDetail extends AppCompatActivity {
     TextView podcastType;
     Podcast mPodcast;
     PodcastRSS podcastRSS;
+    RecyclerView epRecycler;
+    EpisodeRecyclerAdapter epRecAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,5 +91,23 @@ public class PodcastDetail extends AppCompatActivity {
     public void displayPodcastDetail() {
         podcastDesc = findViewById(R.id.podcast_detail_desc);
         podcastDesc.setText(podcastRSS.getChannel().getDescription());
+        setupRecyclerView();
+    }
+
+    public void setupRecycerView() {
+        // copy most recent episodes to new list, to a maximum of 20
+        List<Episode> episodesToDisplay = new ArrayList<Episode>();
+        int numberEpisodes = Math.max(podcastRSS.getChannel().getEpisodes().size(), 20);
+        for (int i = 0; i < numberEpisodes; i++) {
+            episodesToDisplay.add(podcastRSS.getChannel().getEpisodes().get(i));
+        }
+        epRecycler = findViewById(R.id.episodes_recycler);
+        epRecAdapter = new EpisodeRecyclerAdapter(episodesToDisplay,this);
+        epRecycler.setAdapter(epRecAdapter);
+    }
+
+    @Override
+    public void onEpisodeClick(int clickedEpisodeIndex) {
+
     }
 }
