@@ -2,6 +2,7 @@ package com.pfisterfarm.mypublicradio.model;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,12 +57,14 @@ public class EpisodeRecyclerAdapter extends RecyclerView.Adapter<EpisodeRecycler
         final TextView mEpTitle;
         final TextView mEpDesc;
         final LinearLayout mSubItem;
+        final ImageView mExpandIcon;
 
         public ViewHolder(View itemView) {
             super(itemView);
             mEpTitle = (TextView) itemView.findViewById(R.id.episode_title);
             mEpDesc = (TextView) itemView.findViewById(R.id.sub_item_desc);
             mSubItem = (LinearLayout) itemView.findViewById(R.id.sub_item);
+            mExpandIcon = (ImageView) itemView.findViewById(R.id.expand_icon);
             itemView.setOnClickListener(this);
         }
 
@@ -69,13 +72,14 @@ public class EpisodeRecyclerAdapter extends RecyclerView.Adapter<EpisodeRecycler
             boolean expanded = bindEpisode.isExpanded();
             mSubItem.setVisibility(expanded ? View.VISIBLE : View.GONE);
             mEpTitle.setText(bindEpisode.getTitle());
-            mEpDesc.setText(bindEpisode.getDescription());
+            mEpDesc.setText(Html.fromHtml(bindEpisode.getDescription()));
+            mExpandIcon.setImageResource(expanded ? R.drawable.ic_arrow_down : R.drawable.ic_arrow_right);
         }
-
 
         @Override
         public void onClick(View v) {
-
+            int clickedPosition = getAdapterPosition();
+            mEpisodeClickListener.onEpisodeClick(clickedPosition);
         }
     }
 }

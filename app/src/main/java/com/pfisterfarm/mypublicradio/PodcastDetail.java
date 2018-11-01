@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -37,6 +39,7 @@ public class PodcastDetail extends AppCompatActivity implements EpisodeRecyclerA
     PodcastRSS podcastRSS;
     RecyclerView epRecycler;
     EpisodeRecyclerAdapter epRecAdapter;
+    List<Episode> episodesToDisplay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,24 +93,27 @@ public class PodcastDetail extends AppCompatActivity implements EpisodeRecyclerA
 
     public void displayPodcastDetail() {
         podcastDesc = findViewById(R.id.podcast_detail_desc);
-        podcastDesc.setText(podcastRSS.getChannel().getDescription());
+        podcastDesc.setText(Html.fromHtml(podcastRSS.getChannel().getDescription()));
         setupRecyclerView();
     }
 
-    public void setupRecycerView() {
+    public void setupRecyclerView() {
         // copy most recent episodes to new list, to a maximum of 20
-        List<Episode> episodesToDisplay = new ArrayList<Episode>();
-        int numberEpisodes = Math.max(podcastRSS.getChannel().getEpisodes().size(), 20);
+        episodesToDisplay = new ArrayList<Episode>();
+        int numberEpisodes = Math.min(podcastRSS.getChannel().getEpisodes().size(), 20);
         for (int i = 0; i < numberEpisodes; i++) {
             episodesToDisplay.add(podcastRSS.getChannel().getEpisodes().get(i));
         }
         epRecycler = findViewById(R.id.episodes_recycler);
         epRecAdapter = new EpisodeRecyclerAdapter(episodesToDisplay,this);
         epRecycler.setAdapter(epRecAdapter);
+        epRecycler.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL, false));
     }
 
     @Override
     public void onEpisodeClick(int clickedEpisodeIndex) {
-
+        boolean expanded = episodesToDisplay.get(clickedEpisodeIndex).isExpanded();
+        episodesToDisplay.get(clickedEpisodeIndex).setExpanded(!expanded);
+        epRecAdapter.notifyItemChanged(clickedEpisodeIndex);
     }
 }
