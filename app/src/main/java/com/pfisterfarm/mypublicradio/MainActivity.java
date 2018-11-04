@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.facebook.stetho.Stetho;
 import com.pfisterfarm.mypublicradio.model.Podcast;
 import com.pfisterfarm.mypublicradio.model.PodcastRecyclerAdapter;
 import com.pfisterfarm.mypublicradio.model.Podcasts;
@@ -42,6 +43,8 @@ public class MainActivity extends AppCompatActivity implements PodcastRecyclerAd
 
     View podcastRecycler;
     PodcastRecyclerAdapter mPodcastAdapter;
+
+    ;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {

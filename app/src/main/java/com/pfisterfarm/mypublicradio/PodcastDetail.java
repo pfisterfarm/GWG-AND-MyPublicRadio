@@ -8,9 +8,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.pfisterfarm.mypublicradio.database.PodcastDatabase;
 import com.pfisterfarm.mypublicradio.model.Episode;
 import com.pfisterfarm.mypublicradio.model.EpisodeRecyclerAdapter;
 import com.pfisterfarm.mypublicradio.model.Podcast;
@@ -18,6 +21,7 @@ import com.pfisterfarm.mypublicradio.model.PodcastRSS;
 import com.pfisterfarm.mypublicradio.model.Podcasts;
 import com.pfisterfarm.mypublicradio.network.PodcastInterface;
 import com.pfisterfarm.mypublicradio.network.podcastClient;
+import com.pfisterfarm.mypublicradio.utils.AppExecutors;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -35,7 +39,11 @@ public class PodcastDetail extends AppCompatActivity implements EpisodeRecyclerA
     TextView podcastTitle;
     TextView podcastDesc;
     TextView podcastType;
+    Button addButton;
     Podcast mPodcast;
+    private PodcastDatabase mDb;
+    boolean isInLibrary = false;    // hopefully we can find a better way to handle this
+                                     // than in Popular Movies stage 2. For now assume false
     PodcastRSS podcastRSS;
     RecyclerView epRecycler;
     EpisodeRecyclerAdapter epRecAdapter;
@@ -47,6 +55,8 @@ public class PodcastDetail extends AppCompatActivity implements EpisodeRecyclerA
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_podcast_detail);
+
+        mDb = PodcastDatabase.getInstance(getApplicationContext());
 
         Intent intent = getIntent();
 
@@ -61,6 +71,52 @@ public class PodcastDetail extends AppCompatActivity implements EpisodeRecyclerA
                         into(podcastIcon);
                 podcastTitle = findViewById(R.id.podcast_detail_title);
                 podcastTitle.setText(mPodcast.getTrackName());
+
+                addButton = (Button) findViewById(R.id.add_button);
+                addButton.setEnabled(false);    // set disabled initially until db can be checked
+
+                AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        Podcast checkLibrary = mDb.podcastDao().findPodcast(mPodcast.getTrackName());
+                        isInLibrary = (checkLibrary != null);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                addButton.setEnabled(true);
+                                if (isInLibrary) {
+                                    addButton.setText("Remove From Library");
+                                } else {
+                                    addButton.setText("Add To Library");
+                                }
+                            }
+                        });
+
+                    }
+                 });
+
+
+                addButton.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (!isInLibrary) {
+                                    mDb.podcastDao().insertPodcast(mPodcast);
+                                    isInLibrary = true;
+                                    addButton.setText("Remove From Library");
+                                } else {
+                                    mDb.podcastDao().deletePodcast(mPodcast);
+                                    isInLibrary = false;
+                                    addButton.setText("Add To Library");
+                                }
+                            }
+                        });
+
+                    }
+                });
 
                 podcastType = findViewById(R.id.podcast_detail_type);
                 podcastType.setText(mPodcast.getPrimaryGenreName());

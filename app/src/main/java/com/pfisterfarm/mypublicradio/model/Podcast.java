@@ -1,12 +1,21 @@
 package com.pfisterfarm.mypublicradio.model;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
+@Entity(tableName = "podcasts")
 public class Podcast implements Parcelable {
 
+    @PrimaryKey
+    @SerializedName("id")
+    private long id;
+
+    @ColumnInfo(name = "title")
     @SerializedName("trackName")
     private String trackName;
 
@@ -99,4 +108,12 @@ public class Podcast implements Parcelable {
             return new Podcast[size];
         }
     };
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 }
