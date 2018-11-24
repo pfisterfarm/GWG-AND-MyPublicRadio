@@ -63,6 +63,7 @@ public class PodcastDetail extends AppCompatActivity implements EpisodeRecyclerA
         if (intent != null) {
             if (intent.hasExtra(SEND_PODCAST)) {
                 mPodcast = intent.getParcelableExtra(SEND_PODCAST);
+                setTitle(mPodcast.getTrackName());
                 podcastIcon = findViewById(R.id.podcast_detail_icon);
                 Picasso.with(this).
                         load(mPodcast.getArtworkUrl100()).

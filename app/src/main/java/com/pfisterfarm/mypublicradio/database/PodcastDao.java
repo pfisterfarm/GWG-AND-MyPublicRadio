@@ -14,7 +14,7 @@ import java.util.List;
 public interface PodcastDao {
 
     @Query("SELECT * FROM podcasts ORDER BY title")
-    LiveData<List<Podcast>> loadAllPodcasts();
+    List<Podcast> loadAllPodcasts();
 
     @Insert
     void insertPodcast(Podcast podcast);

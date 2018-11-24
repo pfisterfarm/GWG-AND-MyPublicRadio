@@ -11,7 +11,7 @@ import com.google.gson.annotations.SerializedName;
 @Entity(tableName = "podcasts")
 public class Podcast implements Parcelable {
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     @SerializedName("id")
     private long id;
 

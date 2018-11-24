@@ -35,6 +35,8 @@ public class MainActivity extends AppCompatActivity implements PodcastRecyclerAd
 
     private TextView mTextMessage;
 
+    BottomNavigationView navigation;
+
     private final static String LOG_TAG = "debugpublicradio";
 
     private static Podcasts podcastDirectory;
@@ -43,7 +45,6 @@ public class MainActivity extends AppCompatActivity implements PodcastRecyclerAd
 
     View podcastRecycler;
     PodcastRecyclerAdapter mPodcastAdapter;
-
     ;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -52,14 +53,11 @@ public class MainActivity extends AppCompatActivity implements PodcastRecyclerAd
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
-                case R.id.navigation_home:
-                    mTextMessage.setText(R.string.title_home);
+                case R.id.navigation_dir:
                     return true;
-                case R.id.navigation_dashboard:
-                    mTextMessage.setText(R.string.title_dashboard);
-                    return true;
-                case R.id.navigation_notifications:
-                    mTextMessage.setText(R.string.title_notifications);
+                case R.id.navigation_mylib:
+                    Intent startLibrary = new Intent(MainActivity.this, LibraryActivity.class);
+                    startActivity(startLibrary);
                     return true;
             }
             return false;
@@ -71,8 +69,12 @@ public class MainActivity extends AppCompatActivity implements PodcastRecyclerAd
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        setTitle("MyPublicRadio - All Podcasts");
+
         mTextMessage = (TextView) findViewById(R.id.message);
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        navigation.getMenu().findItem(R.id.navigation_dir).setChecked(true);
+        navigation.getMenu().findItem(R.id.navigation_mylib).setChecked(false);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         podcastRecycler = findViewById(R.id.podcast_list);
@@ -80,6 +82,17 @@ public class MainActivity extends AppCompatActivity implements PodcastRecyclerAd
 
         fetchPodcastList();
 
+        Stetho.initialize(
+                Stetho.newInitializerBuilder(this).
+                        enableWebKitInspector(Stetho.defaultInspectorModulesProvider(this)).build());
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        navigation.getMenu().findItem(R.id.navigation_dir).setChecked(true);
+        navigation.getMenu().findItem(R.id.navigation_mylib).setChecked(false);
     }
 
     @Override
